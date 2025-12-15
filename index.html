@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>A Letter for You</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <!-- Handwritten Font -->
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 
@@ -21,9 +28,10 @@
     padding: 50px 40px;
     border-radius: 14px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    font-family: 'Patrick Hand', cursive; /* changed font for better readability */
+    font-family: 'Patrick Hand', cursive; /* handwritten font */
     color: #3a2f2f;
     overflow-y: auto;
+    line-height: 2;
   }
 
   h1 {
@@ -34,8 +42,7 @@
   }
 
   p {
-    font-size: 20px;       /* slightly smaller for better flow */
-    line-height: 2;        /* enough spacing between lines */
+    font-size: 20px;
     white-space: pre-wrap; /* preserves line breaks */
     margin-bottom: 1.8em;
   }
@@ -58,3 +65,45 @@
     display: none;
   }
 </style>
+</head>
+
+<body>
+
+<!-- Background music -->
+<audio id="music" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<div class="paper" id="letter">
+  <h1>To You</h1>
+  <div id="content"></div>
+  <div class="tap">Tap anywhere to play music</div>
+</div>
+
+<script>
+const music = document.getElementById("music");
+const contentDiv = document.getElementById("content");
+
+// Play music on first tap/click
+function playMusic() {
+    music.play().catch(()=>{});
+}
+document.body.addEventListener("click", playMusic, { once: true });
+document.body.addEventListener("touchstart", playMusic, { once: true });
+
+// Load letter from text file
+fetch('letter.txt')
+  .then(response => response.text())
+  .then(text => {
+    const paragraphs = text.split(/\n\s*\n/); // split on empty lines
+    paragraphs.forEach(p => {
+      const para = document.createElement('p');
+      para.textContent = p.trim();
+      contentDiv.appendChild(para);
+    });
+  })
+  .catch(err => console.error("Failed to load letter:", err));
+</script>
+
+</body>
+</html>
